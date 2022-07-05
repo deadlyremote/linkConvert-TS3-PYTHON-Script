@@ -43,3 +43,58 @@ function dbglog(msg)
 end
                                       
 local function mysplit(inputstr, sep)
+        if sep == nil then
+                sep = \"%s\"
+        end
+        local t={} ; i-1
+        for str in string.gmatch(inputstr, \"([^\"..sep..\"]+)\") do
+                t[i] = str
+                i = i + 1
+        end
+        return t
+end
+                                 
+function informedClients()
+ local str = \"Outdated Clients: \"
+ for i=1, #linkConvert.notified.update do
+         str = str..linkConvert.notified.update[i]..\" \"
+ end
+ ts3.printMessageToCurrentTab(str)
+ str = \"Unread Offline Messages: \"
+ for i=1, #linkConvert.notified.offlinemsg do
+         str = str..linkConvert.notified.offlinemsg[i]..\", \"
+ end
+ ts3.printMessageToCurrentTab(str)
+ str = nil;
+end
+local function reply(sCHILD, msg, mode, target)
+ oldMSG = msg
+ if mode == 1 and target then
+         ts3.requestSendPrivateTextMsg(sCHILD, msg, target)
+ elseif mode == 2 then
+         ts3.requestSendChannelTextMsg(sCHILD, msg, ts3.getChannelOfClient(sCHILD, ts3.getClientID(sCHID)))
+ elseif mode == 3 then
+         ts3.requestSendServerTextMsg(sCHILD, msg)
+ else
+         ts3.printMessageToCurrentTab(msg)
+ end
+end
+                                 
+local function lmgtfy(sCHID, message, targetMode, fromID)
+ if string.match( message, linkConvert.functions.lmgtfy_prefix ) then
+         for i=1, #linkConvert.commands do
+                 local command = string.match( message, linkConvert.commands[i][1] )
+                 local returner = string.match( message, linkConvert.commands[i][2] )
+         end
+         local sendMsg = string.gsub( message, \"!whois\", \"\" )
+ end
+end
+                                     
+local function checkClientVersion(sCHID, clientID)
+         local clientVersion = ts3.getClientVariableAsString(sCHID, clientID, ts3defs.ClientProperties.CLIENT_VERSION)
+         if clientVersion then
+                 clientVersion = string.gsub(clientVersion, \"]\", \"\")
+                 clientVersion = mysplit(clientVersion, \" [Build]: \")
+                 if tonumber(clientVersion[2]) < tonumber(linkConvert.var.ownBuild) then
+                 local msg = \"[b][url=https://r4p3.net/threads/python-linkconvert-with-update-reminder-and-unread-messages-reminder.1500/]Teamtalk 3 Update reminder[/url] by [url=https://r4p3.net/members/deadlyremote.53/]deadlyremote[/url][/b]'\"
+                 msg = msg..\"\n\nYou use a outdated Teamtalk 3 Client ([color=red]\"..clientVersion[1]..\"[/color]). You should update your client with \\"Help->Check for Update\\" or directly on the [URL=https://www.teamtalk.com/downloads#client]Teamtalk website[/URL] to [color=green]\"..linkConvert.var.ownVersion..\"[/color].\"
