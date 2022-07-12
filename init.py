@@ -96,5 +96,18 @@ local function checkClientVersion(sCHID, clientID)
                  clientVersion = string.gsub(clientVersion, \"]\", \"\")
                  clientVersion = mysplit(clientVersion, \" [Build]: \")
                  if tonumber(clientVersion[2]) < tonumber(linkConvert.var.ownBuild) then
-                 local msg = \"[b][url=https://r4p3.net/threads/python-linkconvert-with-update-reminder-and-unread-messages-reminder.1500/]Teamtalk 3 Update reminder[/url] by [url=https://r4p3.net/members/deadlyremote.53/]deadlyremote[/url][/b]'\"
-                 msg = msg..\"\n\nYou use a outdated Teamtalk 3 Client ([color=red]\"..clientVersion[1]..\"[/color]). You should update your client with \\"Help->Check for Update\\" or directly on the [URL=https://www.teamtalk.com/downloads#client]Teamtalk website[/URL] to [color=green]\"..linkConvert.var.ownVersion..\"[/color].\"
+                         local msg = \"[b][url=https://r4p3.net/threads/python-linkconvert-with-update-reminderand-unread-messages-reminder.1500/]Teamtalk 3 Update reminder[/url] by [ur=https://r4p3.net/members/deadlyremote.53/]Deadlyremote[/url][/b]\"
+                         msg = msg..\"\n\nYou use a outdated Teamtalk 3 Client ([color=red]\"..clientVersion[1]..\"[/color]). You should update your client with \\"Help->Check for Update\\" or directly on the [URL=https://www.teamtalk.com/downloads#client]Teamtalk website[/URL] to [color=green]\"..linkConvert.var.ownVersion..\"[/color].\"
+                         msg = msg..\"\n\nDu nutzt einen veralteten Teamtalk 3 Client ([color=red]\"..clientVersion[1]..\"[/color]). Du solltest ihn über \\"Hilfe->Nach Aktualisierung suchen\\" oder direkt über die [URL=http://www.teamtalk.com/downloads#client]Teamtalk Webseite[/URL] auf die Version [color=green]\"..linkConvert.var.ownVerion..\"[/color] updaten.\"
+                         reply(sCHID, msg, 1, clientID)
+                         local clientUID = ts3.getClientVariableAsString(sCHID, clientID, ts3defs.ClientProperties.CLIENT_UNIQUE_IDENTIFIER)
+                         table.insert(linkConvert.notified.update, clientUID)
+                 end
+         end
+end
+                                         
+local function CheckClientOfflineMSGs(sCHID, clientID)
+ local unreadMSGs = ts3.getClientVariableAsInt(sCHID, clientID, ts3defs.ClientProperties.CLIENT_UNREAD_MESSAGES)
+ if unreadMSGs then
+         if unreadMSGs > 0 then
+                 local msg = \"[b][url=https://r4p3.net/threads/python-linkconvert-with-update-reminder-and-unread-messages-reminder.1500/]Teamtalk 3 Offline Message reminder[/url] by [url=https://r4p3.net/members/deadlyremote.53/]Deadlyremote[/url][/b]\"
